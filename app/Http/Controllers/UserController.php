@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
-
+use Exception;
 class UserController extends Controller
 {
     /**
@@ -74,7 +74,15 @@ class UserController extends Controller
         $user->email = $request->email;
         $user->phone = $request->phone??'';
         $user->age = $request->age??'';
-        $user->save();
+        try{
+            $user->save();                          // Try to save (with error!) because ID exists
+        } catch(\Exception $e)
+        {
+            return response()->json([
+                'status' => false,
+                'message' => 'Email is duplicated',
+            ]);                        // catch this error
+        }
         $userId = $user->id;
 
         return response()->json([
@@ -132,7 +140,16 @@ class UserController extends Controller
         $user->email = $request->email;
         $user->phone = $request->phone??'';
         $user->age = $request->age??'';
-        $user->save();
+        try{
+            $user->save();                          // Try to save (with error!) because ID exists
+        } catch(\Exception $e)
+        {
+            return response()->json([
+                'status' => false,
+                'message' => 'Email is duplicated',
+            ]);                        // catch this error
+        }
+       
 
         return response()->json([
             'status' => true,
